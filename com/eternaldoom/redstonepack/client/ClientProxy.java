@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.eternaldoom.redstonepack.CommonProxy;
 import com.eternaldoom.redstonepack.blocks.ModBlocks;
+import com.eternaldoom.redstonepack.items.ModItems;
 
 public class ClientProxy extends CommonProxy{
 
@@ -25,6 +26,10 @@ public class ClientProxy extends CommonProxy{
 			registerItem(i, "redstonepack:" + name);
 		}
 		
+		for(String name : ModItems.itemsList){
+			Item i = GameRegistry.findItem("redstonepack", name);
+			registerItem(i, "redstonepack:" + name);
+		}
 	}
 	
 	public static void registerItem(Item item, int metadata, String itemName)
