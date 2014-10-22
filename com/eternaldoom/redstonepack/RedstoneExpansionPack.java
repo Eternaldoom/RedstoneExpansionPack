@@ -1,5 +1,8 @@
 package com.eternaldoom.redstonepack;
 
+import com.eternaldoom.redstonepack.blocks.ModBlocks;
+import com.eternaldoom.redstonepack.items.ModItems;
+
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -18,6 +21,8 @@ public class RedstoneExpansionPack
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
+    	ModBlocks.init();
+    	ModItems.init();
     	proxy.preInit();
     	proxy.preInitClient();
     }

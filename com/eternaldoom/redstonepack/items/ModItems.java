@@ -10,7 +10,14 @@ public class ModItems {
 	
 	public static List<String> itemsList = new ArrayList<String>();
 	
+	public static BaseItem magnesium_ingot, magnesium_dust;
+	public static BaseItem silicon_cone;
+	
 	public static void init(){
+		
+		magnesium_ingot = new BaseItem("ingotMagnesium").register("magnesium_ingot");
+		magnesium_dust = new BaseItem("dustMagnesium").register("magnesium_dust");
+		silicon_cone = new BaseItem("coneSilicon").register("silicon_cone");
 		
 	}
 	
