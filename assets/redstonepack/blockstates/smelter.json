@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "facing=north": { "model": "realmsofchaos:smelter" },
+        "facing=south": { "model": "realmsofchaos:smelter", "y": 180 },
+        "facing=west":  { "model": "realmsofchaos:smelter", "y": 270 },
+        "facing=east":  { "model": "realmsofchaos:smelter", "y": 90 }
+    }
+}
