@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import com.eternaldoom.redstonepack.blocks.ModBlocks;
+import com.eternaldoom.redstonepack.crafting.Recipes;
 import com.eternaldoom.redstonepack.items.ModItems;
 import com.eternaldoom.redstonepack.tileentity.TileEntities;
 
@@ -33,6 +34,7 @@ public class RedstoneExpansionPack
     	proxy.preInit();
     	proxy.preInitClient();
     	NetworkRegistry.INSTANCE.registerGuiHandler(RedstoneExpansionPack.instance, new GUIHandler());
+    	Recipes.init();
     }
     
     @EventHandler

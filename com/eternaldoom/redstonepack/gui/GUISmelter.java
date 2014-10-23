@@ -1,5 +1,8 @@
 package com.eternaldoom.redstonepack.gui;
 
+import com.eternaldoom.redstonepack.container.ContainerSmelter;
+import com.eternaldoom.redstonepack.tileentity.TileEntitySmelter;
+
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -19,7 +22,7 @@ public class GUISmelter extends GuiContainer
 
     public GUISmelter(InventoryPlayer p_i45501_1_, IInventory p_i45501_2_)
     {
-        super(new ContainerFurnace(p_i45501_1_, p_i45501_2_));
+        super(new ContainerSmelter(p_i45501_1_, p_i45501_2_));
         this.playerInv = p_i45501_1_;
         this.tileFurnace = p_i45501_2_;
     }
@@ -42,7 +45,7 @@ public class GUISmelter extends GuiContainer
         this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
         int i1;
 
-        if (TileEntityFurnace.func_174903_a(this.tileFurnace))
+        if (TileEntitySmelter.isBurning(this.tileFurnace))
         {
             i1 = this.getBurnTime(13);
             this.drawTexturedModalRect(k + 56, l + 36 + 12 - i1, 176, 12 - i1, 14, i1 + 1);

@@ -1,7 +1,6 @@
 package com.eternaldoom.redstonepack.tileentity;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockFurnace;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -26,6 +25,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.eternaldoom.redstonepack.blocks.BlockSmelter;
 import com.eternaldoom.redstonepack.container.ContainerSmelter;
 import com.eternaldoom.redstonepack.crafting.SmelterRecipes;
 
@@ -199,6 +199,7 @@ public class TileEntitySmelter extends TileEntityLockable implements IUpdatePlay
         return p_174903_0_.getField(0) > 0;
     }
 
+    @Override
     public void update()
     {
         boolean flag = this.isBurning();
@@ -262,7 +263,7 @@ public class TileEntitySmelter extends TileEntityLockable implements IUpdatePlay
             if (flag != this.isBurning())
             {
                 flag1 = true;
-                BlockFurnace.setState(this.isBurning(), this.worldObj, this.pos);
+                BlockSmelter.setState(this.isBurning(), this.worldObj, this.pos);
             }
         }
 
@@ -286,6 +287,7 @@ public class TileEntitySmelter extends TileEntityLockable implements IUpdatePlay
         else
         {
             ItemStack itemstack = SmelterRecipes.getOutputForIngredients(this.furnaceItemStacks[0], this.furnaceItemStacks[3], this.furnaceItemStacks[4]);
+            System.out.println(itemstack == null);
             return itemstack == null ? false : (this.furnaceItemStacks[2] == null ? true : (!this.furnaceItemStacks[2].isItemEqual(itemstack) ? false : (this.furnaceItemStacks[2].stackSize < this.getInventoryStackLimit() && this.furnaceItemStacks[2].stackSize < this.furnaceItemStacks[2].getMaxStackSize() ? true : this.furnaceItemStacks[2].stackSize < itemstack.getMaxStackSize())));
         }
     }

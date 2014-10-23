@@ -26,10 +26,10 @@ public class ContainerSmelter extends Container
     {
         this.tileFurnace = furnaceInventory;
         this.addSlotToContainer(new Slot(furnaceInventory, 0, 22, 17));
-        this.addSlotToContainer(new Slot(furnaceInventory, 3, 56, 17));
-        this.addSlotToContainer(new Slot(furnaceInventory, 4, 90, 17));
         this.addSlotToContainer(new SlotFurnaceFuel(furnaceInventory, 1, 56, 53));
         this.addSlotToContainer(new SlotFurnaceOutput(playerinv.player, furnaceInventory, 2, 149, 35));
+        this.addSlotToContainer(new Slot(furnaceInventory, 3, 56, 17));
+        this.addSlotToContainer(new Slot(furnaceInventory, 4, 90, 17));
         int i;
 
         for (i = 0; i < 3; ++i)
@@ -115,14 +115,14 @@ public class ContainerSmelter extends Container
 
             if (index == 2)
             {
-                if (!this.mergeItemStack(itemstack1, 3, 39, true))
+                if (!this.mergeItemStack(itemstack1, 5, 39, true))
                 {
                     return null;
                 }
 
                 slot.onSlotChange(itemstack1, itemstack);
             }
-            else if (index != 1 && index != 0)
+            else if (index != 1 && index != 0 && index != 3 && index != 4)
             {
                 if (FurnaceRecipes.instance().getSmeltingResult(itemstack1) != null)
                 {
@@ -138,19 +138,19 @@ public class ContainerSmelter extends Container
                         return null;
                     }
                 }
-                else if (index >= 3 && index < 30)
+                else if (index >= 5 && index < 30)
                 {
                     if (!this.mergeItemStack(itemstack1, 30, 39, false))
                     {
                         return null;
                     }
                 }
-                else if (index >= 30 && index < 39 && !this.mergeItemStack(itemstack1, 3, 30, false))
+                else if (index >= 30 && index < 39 && !this.mergeItemStack(itemstack1, 5, 30, false))
                 {
                     return null;
                 }
             }
-            else if (!this.mergeItemStack(itemstack1, 3, 39, false))
+            else if (!this.mergeItemStack(itemstack1, 5, 39, false))
             {
                 return null;
             }
