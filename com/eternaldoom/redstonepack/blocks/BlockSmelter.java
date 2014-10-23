@@ -37,6 +37,7 @@ public class BlockSmelter extends BlockContainer
     protected BlockSmelter(boolean isBurning)
     {
         super(Material.rock);
+        setUnlocalizedName("smelter");
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
         this.isBurning = isBurning;
     }

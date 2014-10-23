@@ -1,8 +1,8 @@
 {
     "variants": {
-        "facing=north": { "model": "realmsofchaos:smelter_on" },
-        "facing=south": { "model": "realmsofchaos:smelter_on", "y": 180 },
-        "facing=west":  { "model": "realmsofchaos:smelter_on", "y": 270 },
-        "facing=east":  { "model": "realmsofchaos:smelter_on", "y": 90 }
+        "facing=north": { "model": "redstonepack:smelter_on" },
+        "facing=south": { "model": "redstonepack:smelter_on", "y": 180 },
+        "facing=west":  { "model": "redstonepack:smelter_on", "y": 270 },
+        "facing=east":  { "model": "redstonepack:smelter_on", "y": 90 }
     }
 }

@@ -148,7 +148,7 @@ public class TileEntitySmelter extends TileEntityLockable implements IUpdatePlay
         this.furnaceBurnTime = compound.getShort("BurnTime");
         this.field_174906_k = compound.getShort("CookTime");
         this.field_174905_l = compound.getShort("CookTimeTotal");
-        this.currentItemBurnTime = getItemBurnTime(this.furnaceItemStacks[1]);
+        this.currentItemBurnTime = SmelterRecipes.getBurnTime(this.furnaceItemStacks[1].getItem());
 
         if (compound.hasKey("CustomName", 8))
         {
@@ -223,7 +223,7 @@ public class TileEntitySmelter extends TileEntityLockable implements IUpdatePlay
             {
                 if (!this.isBurning() && this.canSmelt())
                 {
-                    this.currentItemBurnTime = this.furnaceBurnTime = getItemBurnTime(this.furnaceItemStacks[1]);
+                    this.currentItemBurnTime = this.furnaceBurnTime = SmelterRecipes.getBurnTime(this.furnaceItemStacks[1].getItem());
 
                     if (this.isBurning())
                     {
@@ -287,7 +287,6 @@ public class TileEntitySmelter extends TileEntityLockable implements IUpdatePlay
         else
         {
             ItemStack itemstack = SmelterRecipes.getOutputForIngredients(this.furnaceItemStacks[0], this.furnaceItemStacks[3], this.furnaceItemStacks[4]);
-            System.out.println(itemstack == null);
             return itemstack == null ? false : (this.furnaceItemStacks[2] == null ? true : (!this.furnaceItemStacks[2].isItemEqual(itemstack) ? false : (this.furnaceItemStacks[2].stackSize < this.getInventoryStackLimit() && this.furnaceItemStacks[2].stackSize < this.furnaceItemStacks[2].getMaxStackSize() ? true : this.furnaceItemStacks[2].stackSize < itemstack.getMaxStackSize())));
         }
     }
@@ -326,51 +325,9 @@ public class TileEntitySmelter extends TileEntityLockable implements IUpdatePlay
         }
     }
 
-    public static int getItemBurnTime(ItemStack p_145952_0_)
+    public static boolean isItemFuel(ItemStack stack)
     {
-        if (p_145952_0_ == null)
-        {
-            return 0;
-        }
-        else
-        {
-            Item item = p_145952_0_.getItem();
-
-            if (item instanceof ItemBlock && Block.getBlockFromItem(item) != Blocks.air)
-            {
-                Block block = Block.getBlockFromItem(item);
-
-                if (block == Blocks.wooden_slab)
-                {
-                    return 150;
-                }
-
-                if (block.getMaterial() == Material.wood)
-                {
-                    return 300;
-                }
-
-                if (block == Blocks.coal_block)
-                {
-                    return 16000;
-                }
-            }
-
-            if (item instanceof ItemTool && ((ItemTool)item).getToolMaterialName().equals("WOOD")) return 200;
-            if (item instanceof ItemSword && ((ItemSword)item).getToolMaterialName().equals("WOOD")) return 200;
-            if (item instanceof ItemHoe && ((ItemHoe)item).getMaterialName().equals("WOOD")) return 200;
-            if (item == Items.stick) return 100;
-            if (item == Items.coal) return 1600;
-            if (item == Items.lava_bucket) return 20000;
-            if (item == Item.getItemFromBlock(Blocks.sapling)) return 100;
-            if (item == Items.blaze_rod) return 2400;
-            return net.minecraftforge.fml.common.registry.GameRegistry.getFuelValue(p_145952_0_);
-        }
-    }
-
-    public static boolean isItemFuel(ItemStack p_145954_0_)
-    {
-        return getItemBurnTime(p_145954_0_) > 0;
+        return SmelterRecipes.getBurnTime(stack.getItem()) > 0;
     }
 
     public boolean isUseableByPlayer(EntityPlayer player)
