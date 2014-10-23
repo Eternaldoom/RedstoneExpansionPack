@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "facing=north": { "model": "redstonepack:smelter" },
+        "facing=south": { "model": "redstonepack:smelter", "y": 180 },
+        "facing=west":  { "model": "redstonepack:smelter", "y": 270 },
+        "facing=east":  { "model": "redstonepack:smelter", "y": 90 }
+    }
+}
