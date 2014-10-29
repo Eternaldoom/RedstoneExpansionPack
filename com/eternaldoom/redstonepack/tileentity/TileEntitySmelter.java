@@ -37,20 +37,23 @@ public class TileEntitySmelter extends TileEntityLockable implements IUpdatePlay
     private ItemStack[] furnaceItemStacks = new ItemStack[5];
     private int furnaceBurnTime;
     private int currentItemBurnTime;
-    private int field_174906_k;
-    private int field_174905_l;
+    private int cookTime;
+    private int totalCookTime;
     private String furnaceCustomName;
 
+    @Override
     public int getSizeInventory()
     {
         return this.furnaceItemStacks.length;
     }
 
+    @Override
     public ItemStack getStackInSlot(int index)
     {
         return this.furnaceItemStacks[index];
     }
 
+    @Override
     public ItemStack decrStackSize(int index, int count)
     {
         if (this.furnaceItemStacks[index] != null)
@@ -81,6 +84,7 @@ public class TileEntitySmelter extends TileEntityLockable implements IUpdatePlay
         }
     }
 
+    @Override
     public ItemStack getStackInSlotOnClosing(int index)
     {
         if (this.furnaceItemStacks[index] != null)
@@ -95,6 +99,7 @@ public class TileEntitySmelter extends TileEntityLockable implements IUpdatePlay
         }
     }
 
+    @Override
     public void setInventorySlotContents(int index, ItemStack stack)
     {
         boolean flag = stack != null && stack.isItemEqual(this.furnaceItemStacks[index]) && ItemStack.areItemStackTagsEqual(stack, this.furnaceItemStacks[index]);
@@ -107,17 +112,19 @@ public class TileEntitySmelter extends TileEntityLockable implements IUpdatePlay
 
         if (index == 0 && !flag)
         {
-            this.field_174905_l = this.func_174904_a(stack);
-            this.field_174906_k = 0;
+            this.totalCookTime = this.getCookProgressTime(stack);
+            this.cookTime = 0;
             this.markDirty();
         }
     }
 
+    @Override
     public String getName()
     {
         return this.hasCustomName() ? this.furnaceCustomName : "Smelter";
     }
 
+    @Override
     public boolean hasCustomName()
     {
         return this.furnaceCustomName != null && this.furnaceCustomName.length() > 0;
@@ -128,6 +135,7 @@ public class TileEntitySmelter extends TileEntityLockable implements IUpdatePlay
         this.furnaceCustomName = p_145951_1_;
     }
 
+    @Override
     public void readFromNBT(NBTTagCompound compound)
     {
         super.readFromNBT(compound);
@@ -146,8 +154,8 @@ public class TileEntitySmelter extends TileEntityLockable implements IUpdatePlay
         }
 
         this.furnaceBurnTime = compound.getShort("BurnTime");
-        this.field_174906_k = compound.getShort("CookTime");
-        this.field_174905_l = compound.getShort("CookTimeTotal");
+        this.cookTime = compound.getShort("CookTime");
+        this.totalCookTime = compound.getShort("CookTimeTotal");
         this.currentItemBurnTime = SmelterRecipes.getBurnTime(this.furnaceItemStacks[1].getItem());
 
         if (compound.hasKey("CustomName", 8))
@@ -156,12 +164,13 @@ public class TileEntitySmelter extends TileEntityLockable implements IUpdatePlay
         }
     }
 
+    @Override
     public void writeToNBT(NBTTagCompound compound)
     {
         super.writeToNBT(compound);
         compound.setShort("BurnTime", (short)this.furnaceBurnTime);
-        compound.setShort("CookTime", (short)this.field_174906_k);
-        compound.setShort("CookTimeTotal", (short)this.field_174905_l);
+        compound.setShort("CookTime", (short)this.cookTime);
+        compound.setShort("CookTimeTotal", (short)this.totalCookTime);
         NBTTagList nbttaglist = new NBTTagList();
 
         for (int i = 0; i < this.furnaceItemStacks.length; ++i)
@@ -183,6 +192,7 @@ public class TileEntitySmelter extends TileEntityLockable implements IUpdatePlay
         }
     }
 
+    @Override
     public int getInventoryStackLimit()
     {
         return 64;
@@ -194,9 +204,9 @@ public class TileEntitySmelter extends TileEntityLockable implements IUpdatePlay
     }
 
     @SideOnly(Side.CLIENT)
-    public static boolean isBurning(IInventory p_174903_0_)
+    public static boolean isBurning(IInventory inv)
     {
-        return p_174903_0_.getField(0) > 0;
+        return inv.getField(0) > 0;
     }
 
     @Override
@@ -214,9 +224,9 @@ public class TileEntitySmelter extends TileEntityLockable implements IUpdatePlay
         {
             if (!this.isBurning() && (this.furnaceItemStacks[1] == null || (this.furnaceItemStacks[0] == null && this.furnaceItemStacks[3] == null && this.furnaceItemStacks[4] == null)))
             {
-                if (!this.isBurning() && this.field_174906_k > 0)
+                if (!this.isBurning() && this.cookTime > 0)
                 {
-                    this.field_174906_k = MathHelper.clamp_int(this.field_174906_k - 2, 0, this.field_174905_l);
+                    this.cookTime = MathHelper.clamp_int(this.cookTime - 2, 0, this.totalCookTime);
                 }
             }
             else
@@ -244,19 +254,19 @@ public class TileEntitySmelter extends TileEntityLockable implements IUpdatePlay
 
                 if (this.isBurning() && this.canSmelt())
                 {
-                    ++this.field_174906_k;
+                    ++this.cookTime;
 
-                    if (this.field_174906_k == this.field_174905_l)
+                    if (this.cookTime == this.totalCookTime)
                     {
-                        this.field_174906_k = 0;
-                        this.field_174905_l = this.func_174904_a(this.furnaceItemStacks[0]);
+                        this.cookTime = 0;
+                        this.totalCookTime = this.getCookProgressTime(this.furnaceItemStacks[0]);
                         this.smeltItem();
                         flag1 = true;
                     }
                 }
                 else
                 {
-                    this.field_174906_k = 0;
+                    this.cookTime = 0;
                 }
             }
 
@@ -273,7 +283,7 @@ public class TileEntitySmelter extends TileEntityLockable implements IUpdatePlay
         }
     }
 
-    public int func_174904_a(ItemStack p_174904_1_)
+    public int getCookProgressTime(ItemStack stack)
     {
         return 200;
     }
@@ -330,55 +340,55 @@ public class TileEntitySmelter extends TileEntityLockable implements IUpdatePlay
         return SmelterRecipes.getBurnTime(stack.getItem()) > 0;
     }
 
+    @Override
     public boolean isUseableByPlayer(EntityPlayer player)
     {
         return this.worldObj.getTileEntity(this.pos) != this ? false : player.getDistanceSq((double)this.pos.getX() + 0.5D, (double)this.pos.getY() + 0.5D, (double)this.pos.getZ() + 0.5D) <= 64.0D;
     }
 
+    @Override
     public void openInventory(EntityPlayer player) {}
 
+    @Override
     public void closeInventory(EntityPlayer player) {}
 
+    @Override
     public boolean isItemValidForSlot(int index, ItemStack stack)
     {
         return index == 2 ? false : (index != 1 ? true : isItemFuel(stack) || SlotFurnaceFuel.isBucket(stack));
     }
 
+    @Override
     public int[] getSlotsForFace(EnumFacing side)
     {
         return side == EnumFacing.DOWN ? slotsBottom : (side == EnumFacing.UP ? slotsTop : slotsSides);
     }
 
+    @Override
     public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction)
     {
         return this.isItemValidForSlot(index, itemStackIn);
     }
 
+    @Override
     public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction)
     {
-        if (direction == EnumFacing.DOWN && index == 1)
-        {
-            Item item = stack.getItem();
-
-            if (item != Items.water_bucket && item != Items.bucket)
-            {
-                return false;
-            }
-        }
-
-        return true;
+        return false;
     }
 
+    @Override
     public String getGuiID()
     {
         return "realmsofchaos:smelter";
     }
 
+    @Override
     public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)
     {
         return new ContainerSmelter(playerInventory, this);
     }
 
+    @Override
     public int getField(int id)
     {
         switch (id)
@@ -388,14 +398,15 @@ public class TileEntitySmelter extends TileEntityLockable implements IUpdatePlay
             case 1:
                 return this.currentItemBurnTime;
             case 2:
-                return this.field_174906_k;
+                return this.cookTime;
             case 3:
-                return this.field_174905_l;
+                return this.totalCookTime;
             default:
                 return 0;
         }
     }
 
+    @Override
     public void setField(int id, int value)
     {
         switch (id)
@@ -407,18 +418,20 @@ public class TileEntitySmelter extends TileEntityLockable implements IUpdatePlay
                 this.currentItemBurnTime = value;
                 break;
             case 2:
-                this.field_174906_k = value;
+                this.cookTime = value;
                 break;
             case 3:
-                this.field_174905_l = value;
+                this.totalCookTime = value;
         }
     }
 
+    @Override
     public int getFieldCount()
     {
         return 4;
     }
 
+    @Override
     public void clear()
     {
         for (int i = 0; i < this.furnaceItemStacks.length; ++i)
